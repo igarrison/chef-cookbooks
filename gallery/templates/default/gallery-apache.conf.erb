@@ -1,0 +1,75 @@
+<VirtualHost *:80>
+  ServerAdmin	<%= node['gallery']['adminemail'] %>
+  ServerName    <%= node['gallery']['wwwname'] %>
+  ServerAlias	<%= node[:fqdn] %>
+  DocumentRoot	<%= node['gallery']['wwwdir'] %>/current
+
+  <% if node['gallery']['apachessl'] -%>  
+  # ensure HTTPS is forced especially for authentication
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+  <% end -%>
+
+  <Directory <%= node['gallery']['wwwdir'] %>/current>
+	Options FollowSymLinks
+	AllowOverride FileInfo Options
+	Order allow,deny
+	Allow from all
+  </Directory>
+
+  <Directory />
+	Options FollowSymLinks
+ 	AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  LogLevel info
+  ErrorLog <%= node['apache']['log_dir'] %>/gallery_error.log
+  CustomLog <%= node['apache']['log_dir'] %>/gallery_access.log combined
+</VirtualHost>
+
+<% if node['gallery']['apachessl'] -%>
+<VirtualHost *:443>
+  ServerAdmin	<%= node['gallery']['adminemail'] %>
+  ServerName    <%= node['gallery']['wwwname'] %>
+  ServerAlias   <%= node[:fqdn] %>
+  DocumentRoot  <%= node['gallery']['wwwdir'] %>/current
+
+  <Directory <%= node['gallery']['wwwdir'] %>/current>
+	Options FollowSymLinks
+	AllowOverride FileInfo Options
+	Order allow,deny
+	Allow from all
+  </Directory>
+
+  <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  SSLEngine on
+  SSLProtocol -ALL +SSLv3 +TLSv1
+  SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
+  SSLCertificateFile <%= node[:gallery][:sslcertfile] %>
+  SSLCertificateKeyFile <%= node[:gallery][:sslkeyfile] %>
+  SSLCertificateChainFile <%= node[:gallery][:sslchainfile] %>
+
+  LogLevel info
+  ErrorLog <%= node['apache']['log_dir'] %>/gallery_error.log
+  CustomLog <%= node['apache']['log_dir'] %>/gallery_access.log combined
+</VirtualHost>
+<% end -%>

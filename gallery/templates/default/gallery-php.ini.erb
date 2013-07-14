@@ -1,0 +1,21 @@
+; Set some reasonable defaults for PHP.  Most of these cannot be set
+; inside the script itself.  These settings are mirrored in the
+; .htaccess file for hosts that support .htaccess but not per-dir
+; php.ini files.
+;
+[PHP]
+short_open_tag = On
+magic_quotes_gpc = Off
+magic_quotes_sybase = Off
+magic_quotes_runtime = Off
+register_globals = Off
+upload_max_filesize = <%= node['gallery']['php']['upload_max_filesize'] %>
+php_value post_max_size = <%= node['gallery']['php']['post_max_size'] %>
+php_value memory_limit = <%= node['gallery']['php']['memory_limit'] %>
+php_value max_file_uploads = <%= node['gallery']['php']['max_file_uploads'] %>
+
+[Session]
+session.auto_start = Off
+
+[suhosin]
+suhosin.session.encrypt = Off
