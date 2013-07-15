@@ -444,7 +444,7 @@ end
 
 if node[:gallery][:module][:image_optimizer]
 
-  %w[gifsicle optipng libjpeg-turbo-progs].each do |imgpackage|
+  %w[gifsicle optipng libjpeg-progs].each do |imgpackage|
      package imgpackage
   end
 

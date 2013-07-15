@@ -17,6 +17,7 @@ Platform
 --------
 
 * Ubuntu 12.04+
+* Debian 7.0+
 
 Cookbooks
 ---------
@@ -98,11 +99,11 @@ Warning: The gallery contrib modules and themes are unsupported.  Certain combin
 Data Bags and Encryption
 ========================
 
-If `node['gallery']['sslcertmode']` is set to 'none' no encrypted data bags or certificate deployment will be done.  Use this if you want to manage certificate deploys some other way than the 'certificate' cookbook.
+If `node['gallery']['sslcertmode']` is set to 'none' (the default) no encrypted data bags or certificate deployment will occur.  Use this if you want to manage certificate deploys some other way than the certificate cookbook.
 
-Any other sslcertmode will use the 'certificate' cookbook for certificate deploys in a 'default', 'wildcard', and 'managed by attributes' recipes which depend on encrypted data bags as documented here http://community.opscode.com/cookbooks/certificate
+Any other sslcertmode will use the certificate cookbook for certificate deploys in a 'default', 'wildcard', and 'managed by attributes' recipes which depend on encrypted data bags as documented here http://community.opscode.com/cookbooks/certificate
 
-The 'certificate' cookbook does not create any certificates, it just deploys certs, keys, and chain files stored in encrypted data bags.  Note that when bootstrapping new servers that use the 'certificate' cookbook for ssl certificate deployment you will need to copy the `encrypted_key_file` to both the server and any knife management clients that update the certificates
+The certificate cookbook does not create any certificates, it just deploys certs, keys, and chain files stored in encrypted data bags.  Note that when bootstrapping new servers that use the certificate cookbook for ssl certificate deployment you will need to copy the `encrypted_key_file` to both the server and any knife management clients that update the certificates
 
 Usage
 =====
