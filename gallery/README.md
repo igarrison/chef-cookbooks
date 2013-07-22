@@ -1,7 +1,7 @@
 Description
 ===========
 
-Installs and configures Gallery v3.0.x, a web based (LAMP) Image/Video/File gallery http://galleryproject.org/
+Installs and configures Gallery v3.0.x, a web based (LAMP) Image/Video/File gallery, as well as gallery-contrib modules and themes. http://galleryproject.org/
 
 Requirements
 ============
@@ -87,14 +87,14 @@ Warning: The gallery contrib modules and themes are unsupported.  Certain combin
 * `node['gallery']['contribmodules']` - Toggle whether you want to install any of the contrib modules or not.  Contrib modules are unsupported by the gallery team and certain combinations can interact badly, use with care but some are very useful (default is true)
 * `node['gallery']['module']['modulename']` - Toggle whether you want to install a particular module or not (default is to install almost all modules).  Note that you still must activate individual modules in Gallery's Administrative Web UI
 
-* `node['gallery']['module']['ldapmod']['allgroups']` - Fill this array with all of the LDAP groups you want to be mapped to gallery groups.  At a minimum you might want to have 1 non-authenticated user group (an 'everybody group') and 1 registered users group (default is [ " Administrators", "Guest" ])
+* `node['gallery']['ldapmodule']['allgroups']` - Fill this array with all of the LDAP groups you want to be mapped to gallery groups.  At a minimum you might want to have 1 non-authenticated user group (an 'everybody group') and 1 registered users group (default is [ " Administrators", "Guest" ])
 
-* `node['gallery']['module']['ldapmod']['everybody_group']` - Often a 'guest' type group, this is used by non-authenticated users (default is "Guest")
-* `node['gallery']['module']['ldapmod']['regusergroup']` - Any members of this LDAP group are deemed 'registered' by Gallery (default is "Administrators")
-* `node['gallery']['module']['ldapmod']['adminusers']` - Any LDAP users listed in this array are granted full administrative privileges to Gallery.  Note activation of the LDAP module completely disables the local galleryadmin user (default is [ "joe", "bob" ] )
-* `node['gallery']['module']['ldapmod']['ldaphost']` - LDAP protocol URI to the LDAP server's hostname or ip address (default is "ldaps://ldap1.example.com")
-* `node['gallery']['module']['ldapmod']['groupdn']` - Distinguished Name for setting LDAP Group Search Scope (default is "ou=Groups,dc=example,dc=com")
-* `node['gallery']['module']['ldapmod']['userdn']` - Distinguished Name for setting LDAP User Search Scope (default is "ou=People,dc=example,dc=com")
+* `node['gallery']['ldapmodule']['everybody_group']` - Often a 'guest' type group, this is used by non-authenticated users (default is "Guest")
+* `node['gallery']['ldapmodule']['regusergroup']` - Any members of this LDAP group are deemed 'registered' by Gallery (default is "Administrators")
+* `node['gallery']['ldapmodule']['adminusers']` - Any LDAP users listed in this array are granted full administrative privileges to Gallery.  Note activation of the LDAP module completely disables the local galleryadmin user (default is [ "joe", "bob" ] )
+* `node['gallery']['ldapmodule']['ldaphost']` - LDAP protocol URI to the LDAP server's hostname or ip address (default is "ldaps://ldap1.example.com")
+* `node['gallery']['ldapmodule']['groupdn']` - Distinguished Name for setting LDAP Group Search Scope (default is "ou=Groups,dc=example,dc=com")
+* `node['gallery']['ldapmodule']['userdn']` - Distinguished Name for setting LDAP User Search Scope (default is "ou=People,dc=example,dc=com")
 
 Data Bags and Encryption
 ========================
@@ -127,16 +127,14 @@ Below is a more complex config that deploys an unlimited wildcard ssl certificat
           "adminemail": "postmaster@example.com",
           "apachessl": true,
           "sslcertmode": "wildcard",
-          "module": {
-            "ldapmod": {
-              "allgroups": [ "sysadmin", "guest" ],
-              "regusergroup": "sysadmin",
-              "everybody_group": "guest",
-              "adminusers": [ "joe", "bob" ],
-              "ldaphost": "ldaps://ldap.domain.com/",
-              "userdn": "ou=People,dc=domain,dc=com",
-              "groupdn": "ou=Groups,dc=domain,dc=com"
-            }
+          "ldapmodule": {
+            "allgroups": [ "sysadmin", "guest" ],
+            "regusergroup": "sysadmin",
+            "everybody_group": "guest",
+            "adminusers": [ "joe", "bob" ],
+            "ldaphost": "ldaps://ldap.domain.com/",
+            "userdn": "ou=People,dc=domain,dc=com",
+            "groupdn": "ou=Groups,dc=domain,dc=com"
           }
         }
       }

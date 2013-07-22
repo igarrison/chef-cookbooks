@@ -49,7 +49,7 @@ default[:gallery][:module][:itemchecksum] = true
 default[:gallery][:module][:metadescription] = true
 default[:gallery][:module][:minislideshow] = true
 default[:gallery][:module][:moduleorder] = true
-default[:gallery][:module][:nohomelink] = false
+default[:gallery][:module][:no_home_link] = false
 default[:gallery][:module][:pages] = true
 default[:gallery][:module][:pam] = true
 default[:gallery][:module][:photo_annotation] = true
@@ -111,10 +111,11 @@ default[:gallery][:module][:keeporiginal] = true
 default[:gallery][:module][:exif_gps] = true
 default[:gallery][:module][:arrow_nav] = true
 default[:gallery][:module][:ldap] = true
-default[:gallery][:module][:ldapmod][:allgroups] = [ "Administrators", "Guest" ]
-default[:gallery][:module][:ldapmod][:everybody_group] = "Guest"
-default[:gallery][:module][:ldapmod][:regusergroup] = "Administrators"
-default[:gallery][:module][:ldapmod][:adminusers] = [ "joe", "bob" ]
-default[:gallery][:module][:ldapmod][:ldaphost] = "ldaps://ldap01.example.com/"
-default[:gallery][:module][:ldapmod][:groupdn] = "ou=Groups,dc=example,dc=com"
-default[:gallery][:module][:ldapmod][:userdn] = "ou=People,dc=example,dc=com"
+
+default[:gallery][:ldapmodule][:allgroups] = [ "Administrators", "Guest" ]
+default[:gallery][:ldapmodule][:everybody_group] = "Guest"
+default[:gallery][:ldapmodule][:regusergroup] = "Administrators"
+default[:gallery][:ldapmodule][:adminusers] = [ "joe", "bob" ]
+default[:gallery][:ldapmodule][:ldaphost] = "ldaps://ldap01.example.com/"
+default[:gallery][:ldapmodule][:groupdn] = "ou=Groups,dc=example,dc=com"
+default[:gallery][:ldapmodule][:userdn] = "ou=People,dc=example,dc=com"

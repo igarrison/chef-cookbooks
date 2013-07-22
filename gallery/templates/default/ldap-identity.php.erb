@@ -36,13 +36,13 @@ $config["ldap"] = array(
   "params"        => array(
     /* "guest_user" => "guest", */
     "groups" => array(<%= @allgroups %>),
-    "everybody_group" => "<%= node['gallery']['module']['ldapmod']['everybody_group'] %>",
-    "registered_users_group" => "<%= node['gallery']['module']['ldapmod']['regusergroup'] %>",
+    "everybody_group" => "<%= node['gallery']['ldapmodule']['everybody_group'] %>",
+    "registered_users_group" => "<%= node['gallery']['ldapmodule']['regusergroup'] %>",
     "admins" => array(<%= @adminusers %>),
     "admin_mail" => "<%= node['gallery']['adminemail'] %>",
-    "url" => "<%= node['gallery']['module']['ldapmod']['ldaphost'] %>",
-    "group_domain" => "<%= node['gallery']['module']['ldapmod']['groupdn'] %>",
-    "user_domain" => "<%= node['gallery']['module']['ldapmod']['userdn'] %>"
+    "url" => "<%= node['gallery']['ldapmodule']['ldaphost'] %>",
+    "group_domain" => "<%= node['gallery']['ldapmodule']['groupdn'] %>",
+    "user_domain" => "<%= node['gallery']['ldapmodule']['userdn'] %>"
     /* "bind_rdn" => null,
     "bind_password" => null, */
   )
