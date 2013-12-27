@@ -1,0 +1,10 @@
+# This file is managed by Chef!
+#
+# Set some reasonable defaults for PHP.  Most of these cannot be set
+# inside the script itself.  For hosts that don't have .htaccess
+# support but do support per-dir php.ini files, these settings are
+# mirrored in php.ini
+#
+<IfModule mod_php5.c>
+  php_value max_execution_time 60
+</IfModule>

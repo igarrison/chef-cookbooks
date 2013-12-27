@@ -1,0 +1,22 @@
+{
+  "json_class": "Chef::Role",
+  "chef_type": "role",
+  "default_attributes": {
+  },
+  "name": "teampass-server",
+  "override_attributes": {
+    "teampass": {
+      "email": "youremail@example.com",
+      "wwwhostname": "teampass.example.com",
+      "version": "3.1.19",
+      "apachessl": true,
+      "sslcertmode": "wildcard"
+    }
+  },
+  "description": "Teampass Web Based Password Management Server (LAMP)",
+  "env_run_lists": {
+  },
+  "run_list": [
+    "recipe[teampass]"
+  ]
+}

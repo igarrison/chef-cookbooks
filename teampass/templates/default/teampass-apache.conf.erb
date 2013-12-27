@@ -1,0 +1,79 @@
+# This file is managed by Chef!
+<VirtualHost *:80>
+  ServerAdmin  <%= node['teampass']['email'] %>
+  ServerName   <%= node['teampass']['wwwhostname'] %>
+  #ServerAlias <%= node[:fqdn] %>
+  DocumentRoot <%= node['teampass']['dir'] %>/current
+
+  <% if node['teampass']['apachessl'] -%>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+  <% end -%>
+
+  <Directory <%= node['teampass']['dir'] %>/current>
+	Options FollowSymLinks
+	AllowOverride FileInfo Options
+	order allow,deny
+	allow from all
+	AddType application/x-httpd-php .php
+	DirectoryIndex index.php
+  </Directory>
+
+  <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  LogLevel  info
+  CustomLog <%= node['apache']['log_dir'] %>/teampass_access.log combined
+  ErrorLog  <%= node['apache']['log_dir'] %>/teampass_error.log
+</VirtualHost>
+
+<% if node['teampass']['apachessl'] -%>
+<VirtualHost *:443>
+  ServerAdmin    <%= node['teampass']['email'] %>
+  ServerName   <%= node['teampass']['wwwhostname'] %>
+  #ServerAlias <%= node[:fqdn] %>
+  DocumentRoot <%= node['teampass']['dir'] %>/current
+
+  <Directory <%= node['teampass']['dir'] %>/current>
+	Options FollowSymLinks
+	AllowOverride FileInfo Options
+	order allow,deny
+	allow from all
+	AddType application/x-httpd-php .php
+	DirectoryIndex index.php
+  </Directory>
+
+  <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  SSLEngine on
+  SSLProtocol -ALL +SSLv3 +TLSv1
+  SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
+  SSLCertificateFile <%= node[:teampass][:sslcertfile] %>
+  SSLCertificateKeyFile <%= node[:teampass][:sslkeyfile] %>
+  SSLCertificateChainFile <%= node[:teampass][:sslchainfile] %>
+
+  LogLevel  info
+  CustomLog <%= node['apache']['log_dir'] %>/teampass_access.log combined
+  ErrorLog  <%= node['apache']['log_dir'] %>/teampass_error.log
+</VirtualHost>
+<% end -%>

@@ -1,0 +1,42 @@
+{
+  "name": "teampass",
+  "description": "Installs/Configures teampass a collaborative password management site http://www.teampass.net/",
+  "long_description": "",
+  "maintainer": "Ian Garrison",
+  "maintainer_email": "garrison@technoendo.net",
+  "license": "Apache 2.0",
+  "platforms": {
+    "ubuntu": ">= 12.04",
+    "debian": ">= 7.0"
+  },
+  "dependencies": {
+    "mysql": ">= 0.0.0",
+    "apache2": ">= 0.0.0",
+    "php": ">= 0.0.0",
+    "openssl": ">= 0.0.0",
+    "database": ">= 0.0.0",
+    "git": ">= 0.0.0",
+    "chef-vault": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "teampass": "Default recipe",
+    "teampass::corefiles": "Installs core teampass files and dependancies",
+    "teampass::database-mysql": "Installs mysql and sets up database schema and user grants",
+    "teampass::webserver-apache2": "Installs Apache2 and creates a virtual host for teampass"
+  },
+  "version": "0.1.0"
+}
