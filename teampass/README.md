@@ -151,9 +151,12 @@ Copy `includes/settings.php` and `secrets/secrets/sk.php` from the old Teampass 
 
 Go to `http://TEAMPASSITE/install/upgrade.php` and follow any instructions to update the database schema.
 
-= BACKUPS:
+BACKUPS
+=======
 
-Just be advised that there is a SALT value set during installation that is stored in the Teampass installations php files and is crucial for the encryption in the mysql database to function.  You cannot use a mysqldump restored teampass database if you don't have the same teampass installation with the correct SALT value.  This cookbook does not address backups.  This is just a tip for you to go think about backups.
+Be advised that there is a SALT value set during installation that is stored in the Teampass secrets/sk.php and is crucial for the encryption in the mysql database to function.  You cannot use a mysqldump restored teampass database if you don't have the same teampass installation with the correct SALT value.
+
+This cookbook does not address backups currently but I like the idea of cookbooks also offering backup mechanisms to a common framework so things just work and am considering adding support for https://github.com/opscode-cookbooks/opscode-backup
 
 License and Authors
 ===================

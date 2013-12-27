@@ -1,14 +1,7 @@
 #!/bin/bash
 #
-# Problem: There is all kinds of great web software out there I want to use or to help people setup, but when authentication gets involved you really do want to run https which means getting involved with ssl certificates.  Making certs for each server manually is undesirable.  I may not have a commercially signed ssl certificate ready but still want to get up and running with https.  Ideally it would be nice to support multiple domains and subdomains with a single cert and not have any limitations on the number of servers its distributed to.  We also want to keep the CA cert so client browsers could choose to trust it and not be bothered by chain of trust browser warnings (and the wildcard/SAN names should prevent the annoying cert-name-doesn't-match-browser-name warnings).
+# Credit to Sean Porter (portertech) on the sensu team for this script and the original openssl.cnf which can be found here https://github.com/sensu/sensu-chef/tree/master/examples/ssl.  I have modified it to not make a client certificate, and the openssl.cnf was modified to support wildcard domain names with subject alternative name (multiple domain/subdomain) support.
 #
-# Solution: commercial unlimited wildcard ssl certificates can be expensive, even moreso if you want SAN certs supporting multiple wildcard domain names and wildcard subdomain names all in one massive cert.  If you already have a commercial unlimited wildcard ssl certificate that meets your domain needs you do not need this script or self signed certs.  However if you want to get up and running quickly without paying any money lets try and imitate this wildcard+SAN cert strategy but with a single self signed cert to manage in chef.
-#
-# Purpose: if you have 'openssl' installed on your system this script can generate a single signed wildcard ssl certificate, a key file, and a certificate authority file.  After you edit the certificates_ca/openssl.cnf to set your preferred details you can run the script.  Note that the goal here is to run a *.example.com ssl certificate, and have a number of Subject Alternative Name (SAN) like example.com, *.example.com, *.subdomain.example.com, and *.someotherdomain.com (see the example openssl.cnf). 
-#
-# Where To Generate Certs: We're using chef to deploy ssl certificates, so we'll just generate them on our own workstation, and once the cert/key/cacert are all uploaded to the chef-server we can wipe/remove it.  Should you ever need to regenerate a cert just run the script again to generate new certs, upload them to the chef-server again, and run chef-client over all servers.   
-#
-# Where To Use Self Signed Certs: on public facing sites viewed by your customers.  I would prefer also not to have less technical internal/business users having to deal with browser chain of trust warnings at all.  Go buy certs for those things.  These self signed certs are perfect for machines talking to machines, or engineers willing to trust the public cacert so they avoid browser warnings.
 #
 
 shopt -s extglob
