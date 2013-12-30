@@ -111,11 +111,13 @@ I think its the best chef pattern for secrets management right now.  You don't h
 
 If you have your own commercial certs copy the `examples/vault/selfsigned_wildcard_ssl_cert.json` and use it as an example template for creating a .json file to be ingested with chef vault.  Once you have made a customized `wildcard_yourdomain_com_ssl_cert.json` import it with this command:
 
-`knife encrypt create vault wildcard_yourdomain_com_ssl_cert --json ./wildcard_yourdomain_com_ssl_cert.json --search 'roles:base' --admins admin,youruser,user1,user2 --mode client`
+`knife encrypt create vault wildcard_yourdomain_com_ssl_cert --json ./wildcard_yourdomain_com_ssl_cert.json \
+--search 'roles:base' --admins admin,youruser,user1,user2 --mode client`
 
 If you are using the `selfsigned_wildcard_ssl_cert.json` run something like this:
 
-`knife encrypt create vault selfsigned_wildcard_ssl_cert --json ./selfsigned_wildcard_ssl_cert.json --search 'roles:base' --admins admin,youruser,user1,user2 --mode client`
+`knife encrypt create vault selfsigned_wildcard_ssl_cert --json ./selfsigned_wildcard_ssl_cert.json \
+--search 'roles:base' --admins admin,youruser,user1,user2 --mode client`
 
 Use some other list of users or scope of servers as you see fit.  Note that you can always 'knife data bag list' and 'knife data bag show' commands around the vault you will notice for each vault item 2 data bags are created.  The one with `_keys` in the name always shows the list of users and servers with permissions to decrypt the chef vault data. 
 
@@ -129,7 +131,8 @@ To decrypt and store the vault stored on the server as json:
 
 Gotcha #1: Expect chef-client runs on new servers to fail!  Because chef vault stores a list of clients and servers, when a new server is added you need to update that client list to include it with a 'knife encrypt update'.  My hope is this will get better in time.  This is a 'chicken before egg' problem right now.
 
-`knife encrypt update vault selfsigned_wildcard_ssl_cert --search 'roles:base' --json ./selfsigned_wildcard_ssl_cert.json --admins admin,youruser,user1,user2 --mode client`
+`knife encrypt update vault selfsigned_wildcard_ssl_cert --search 'roles:base' --json ./selfsigned_wildcard_ssl_cert.json \
+--admins admin,youruser,user1,user2 --mode client`
 
 LDAP
 ====
