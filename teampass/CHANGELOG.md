@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of teampass.
 
+## v0.1.1:
+* added the "[teampass::backup]" recipe which uses the "[opscode-backup]" cookbook to provide a framework for simple rsync based backups.  See the "Backups" section in README.md for more details.
+
 ## v0.1.0:
 
 * certificate storage is done with chef-vault or left to the user

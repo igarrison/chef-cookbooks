@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# We don't want to save the mysql root password on disk or expose it in the 
+# process table.  This will pull it out of the node data in Chef write a 
+# .my.cnf file for root (not via Chef to keep it out of the chef-client.log
+# file), take a mysql backup and finally delete the .my.cnf
+
+mysql_password=$(knife node show <%= node.name %> -c <%= Chef::Config[:config_file] %> --long|grep server_root_password|awk '{print $2}')
+echo -e "[mysqldump]\nuser=root\npassword='${mysql_password}'" > ~/.my.cnf && chmod 600 ~/.my.cnf
+mv <%= node['teampass']['backup_dir'] %>/current/* <%= node['teampass']['backup_dir'] %>/archive/
+mysqldump --opt <%= node['teampass']['dbname'] %> | gzip > <%= node['teampass']['backup_dir'] %>/current/db-teampass-`date +%Y%m%d%H%M%S`.sql.gz
+mysqldump --opt mysql | gzip > <%= node['teampass']['backup_dir'] %>/current/db-mysql-`date +%Y%m%d%H%M%S`.sql.gz
+rm ~/.my.cnf
+tar czfp <%= node['teampass']['backup_dir'] %>/current/teampass-files-`date +%Y%m%d%H%M%S`.tar.gz <%= node['teampass']['dir'] %>/releases/<%= node['teampass']['version'] %>
+chmod 640 <%= node['teampass']['backup_dir'] %>/*/*.gz

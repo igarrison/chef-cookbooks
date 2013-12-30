@@ -1,6 +1,8 @@
 default[:teampass][:version] = "2.1.19"
 default[:teampass][:gitrepo] = "git://github.com/nilsteampassnet/TeamPass.git"
 default[:teampass][:dir] = "/var/www/teampass"
+default[:teampass][:backup_dir] = "/var/backups/teampass"
+default[:teampass][:backup_schedule] = "0 23 * * *"
 
 default[:teampass][:database_mysql] = true
 default[:teampass][:dbname] = "teampassdb"

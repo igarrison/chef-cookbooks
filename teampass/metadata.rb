@@ -3,7 +3,7 @@ maintainer_email "garrison@technoendo.net"
 license          "Apache 2.0"
 description      "Installs/Configures teampass a collaborative password management site http://www.teampass.net/"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
-version          "0.1.0"
+version          "0.1.1"
 
 %w{ debian ubuntu }.each do |os|
   supports os
@@ -16,3 +16,4 @@ depends "openssl"
 depends "database"
 depends "git"
 depends "chef-vault"
+depends "opscode-backup"
