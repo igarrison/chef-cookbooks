@@ -18,6 +18,7 @@ Optional
 * For LDAP, PHP extension “LDAP” enabled
 * chef-vault is used by this cookbook for ssl certificate management
 * mod-ssl and mod-rewrite apache2 modules if SSL is used
+* rsync and an rsyncd role:backup-server if "[teampass::backup]" recipe is used
 
 Platform
 --------
@@ -32,6 +33,13 @@ Requires community site cookbooks: openssl, mysql, database, git, php, apache2, 
 
 Attributes
 ==========
+
+Teampass Core Attributes
+------------------------
+
+* `node['teampass']['dir']` - The install directory which is also served via Apache2 (default "/var/www/teampass")
+* `node['teampass']['version']` - The Teampass version to install (default "2.1.19")
+* `node['teampass']['gitrepo']` - Git repository for Teampass install files (default "git://github.com/nilsteampassnet/TeamPass.git")
 
 Database Attributes
 -------------------
@@ -59,13 +67,6 @@ Web/Apache/SSL Attributes
 * `node['teampass']['sslcertfile']` - The PEM formatted SSL certificate file used in HTTPS communications (default `/etc/apache2/ssl/selfsigned_wildcard.pem`)
 * `node['teampass']['sslkeyfile']` - The SSL certificate private key file used in HTTPS communications (default `/etc/apache2/ssl/selfsigned_wildcard.key`)
 * `node['teampass']['sslchainfile']` - The PEM formatted SSL certificate file used in HTTPS communications to complete the chain of trust between web browsers, web servers, and your chosen Certificate Authorities (default `/etc/apache2/ssl/selfsigned_wildcard_cacert.pem`)
-
-Teampass Core Attributes
-------------------------
-
-* `node['teampass']['dir']` - The install directory which is also served via Apache2 (default "/var/www/teampass")
-* `node['teampass']['version']` - The Teampass version to install (default "2.1.19")
-* `node['teampass']['gitrepo']` - Git repository for Teampass install files (default "git://github.com/nilsteampassnet/TeamPass.git")
 
 Teampass Backup Attributes
 --------------------------
@@ -162,6 +163,10 @@ Backups
 =======
 
 If you backup on your own be sure to keep a mysqldump of the database paired with the installation files used with it as some encrypted data in the database depends on a SALT value set in secrets/sk.php.
+
+If you do not have your own mysql and file backup capabilities you can use the `[teampass::backup]` recipe which depends on the `[opscode-backup]` cookbook:
+
+https://github.com/opscode-cookbooks/opscode-backup
 
 To enable backups add the `recipe[teampass::backup]` recipe to a node or role and run 'chef-client' on it.  This assumes you have setup a "role:backup-server" node in your environment which runs the "opscode-backup::server" recipe.  You will need a data bag named 'secrets' with a data bag name matching your `chef_environment` (which was `_default` for me).  So I created this with `knife data bag create secrets _defaults` and used something similar to the JSON below:
 
