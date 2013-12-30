@@ -127,7 +127,9 @@ Use some other list of users or scope of servers as you see fit.  Note that you 
 
 To decrypt the vault stored on the server:
 
-`knife decrypt vault selfsigned_wildcard_ssl_cert --mode client`
+```
+knife decrypt vault selfsigned_wildcard_ssl_cert --mode client
+```
 
 To decrypt and store the vault stored on the server as json:
 
@@ -136,8 +138,8 @@ To decrypt and store the vault stored on the server as json:
 Gotcha #1: Expect chef-client runs on new servers to fail!  Because chef vault stores a list of clients and servers, when a new server is added you need to update that client list to include it with a 'knife encrypt update'.  My hope is this will get better in time.  This is a 'chicken before egg' problem right now.
 
 ```
-knife encrypt update vault selfsigned_wildcard_ssl_cert --search 'roles:base' --json ./selfsigned_wildcard_ssl_cert.json \
---admins admin,youruser,user1,user2 --mode client
+knife encrypt update vault selfsigned_wildcard_ssl_cert --search 'roles:base' --json \
+./selfsigned_wildcard_ssl_cert.json --admins admin,youruser,user1 --mode client
 ```
 
 LDAP
