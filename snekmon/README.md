@@ -13,12 +13,13 @@ WARNING: This cookbook is for a very specific use and was created after my rpi's
 Requirements
 ------------
 - Raspberry Pi B+ or better (runs poller)
-- 2x TEMPer1V1.4 modules (Microdia is manufacturer per lsusb) are supported by https://github.com/padelt/temper-python
-- 1x TEMPERHUM1v1.0 module (also Microdia) is supported by https://github.com/edorfaus/TEMPered which depends on https://github.com/signal11/hidapi
+- 2x TEMPer1V1.4 modules are supported by https://github.com/padelt/temper-python
+- 1x TEMPERHUM1v1.0 module is supported by https://github.com/edorfaus/TEMPered which depends on https://github.com/signal11/hidapi
 - External Graphite Server (can run alerter).  I used https://github.com/opscode-cookbooks/oc-graphite and https://github.com/JonathanTron/chef-grafana (grafana is optional, its a front-end dashboard that can make graphite very pretty)
 - http://prowlapp.com account with an API key is supported by https://github.com/jacobb/prowlpy
 - Network accessible package and source repositories
 - Python was selected for the scripts as its the most ironic
+- A chef server on the network that all devices are bootstrapped to, or possibly using chef-zero/chef-solo without a chef server (untested)
 
 Cookbook Dependencies
 ---------------------
