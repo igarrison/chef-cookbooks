@@ -1,12 +1,12 @@
-Snekmon Cookbook
+Snekmon Cookbook for Chef
 ===========================
 ![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.jpg "Raspberry Pi Snake Monitoring and Alerting")
 
-The snekmon chef cookbook is for a very specific application where a raspberry pi B+ or better (4 usb ports required!) has a USB wifi module, 2 USB temp probes, and a USB combo humidity/temp probe to collect metrics and send them to a graphite server.  The poller runs on the raspberry pi, but as I don't see the rpi as a reliable place for long term storage the graphite server is run on virtual machine elsewhere on the lan.
+The snekmon chef cookbook is for a very specific application where a raspberry pi B+ or better (4 usb ports required!) running Raspbian 7 has a USB wifi module, 2 USB temp probes, and a USB combo humidity/temp probe to collect metrics and send them to an existing graphite server.  This python poller script runs on the raspberry pi and the vital storage is all on the graphite server (not on the rpi for reasons of reliability).
 
-3 temperature probes can be placed with one at the "hot side", "center", "cool side" and as the metrics go into our time series database we can get graphs for different periods of time to visualize the temperature gradient that is vital to the care of reptiles.  I want to be able to have multiple years of data at 1 minute resolution and see things like seasonal variations in temperature.
+3 temperature probes can be placed with one at the "hot side", "center", "cool side" and as the metrics are stored in graphite we can visualize the temperature gradient that is vital to the care of reptiles.  I want to see things like seasonal variations in temperature.
 
-Aside from visualization we also want to get smartphone push alerts via prowlapp.com if the averate temps and humidity over the last hour are outside acceptable ranges.
+Aside from visualization we also want to get smartphone push alerts via prowlapp.com if the averate temps and humidity over the last hour are outside acceptable ranges.  This way on the first early days of summer I can be more mindful of spikes in temperature at home no matter where I am and just be aware of the problem.
 
 WARNING: This cookbook is for a very specific use and was created after my rpi's filesystem corrupted after 3 months of use.  This is a "quick & dirty" cookbook, there are no tests, its not using the best cookbook design patterns.  Its probably going to suck to use for anyone else but me.
 
