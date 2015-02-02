@@ -127,8 +127,10 @@ This recipe does nothing.  Do not use it!  It is a trick to hopefully be mindful
 #### snekmon::poller
 For me this runs on a raspberry pi B+ running raspbian 7 with the 3 USB temp/humidity probes connected to it.  Runit does the process supervision in case it ever dies.  Normally it shouldn't log anything and you may want to uncomment print lines as needed to see output and debug further.  The raspberry pi device collects the metrics and sends them to an existing graphite server on the network.
 
+By default the poller runs on the pi every 60 seconds.  Technically it can run as frequently as every 10 seconds with nothing else running on the pi.
+
 #### snekmon::alerting
-This can run anywhere in your environment that can talk to your graphite server.  I run this right on the graphite server myself.  This probably could run on the raspberry pi but I prefer to be very careful about not putting too much load on it.  Right now only prowlapp.com push notifications to a smartphone is supported.  For alerting to work you are expected to already have an account on prowlapp.com and have provided your API key as an attribute `prowlapi_key`.  This script queries all the reptile environment metrics over the last hour and sends the prowl alerts for violations outside the range set by the attributes in this cookbook.
+This can run anywhere in your environment that can talk to your graphite server and prowlapp.com.  I run this right on the graphite server myself.  This probably could run on the raspberry pi but I prefer to be very careful about not putting too much load on it.  Right now only prowlapp.com push notifications to a smartphone is supported.  For alerting to work you are expected to already have an account on prowlapp.com and have provided your API key as an attribute `prowlapi_key`.  This script queries all the reptile environment metrics over the last hour and sends the prowl alerts for violations outside the range set by the attributes in this cookbook.
 
 In addition to putting the poller and/or alerting recipe on a node there probably are some other attributes you will want to overrite (see: attributes for the rest):
 ```json
@@ -151,9 +153,7 @@ Contributing
 1. Fork the repository on Github
 2. Create a named feature branch (like `add_component_x`)
 3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+4. Submit a Pull Request using Github
 
 License and Authors
 -------------------
