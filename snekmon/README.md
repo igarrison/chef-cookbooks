@@ -1,5 +1,7 @@
 Snekmon Cookbook
 ===========================
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/grafana_dashboard.png "Grafana Dashboard front end for Graphite to visualize Reptile Environmentals")
+
 The Snek Cookbook is for a very specific application where a raspberry pi B+ (4 usb ports required!) has a USB wifi module, 2 USB temp probes, and a USB combo humidity/temp probe to collect metrics and send them to a graphite server.  The poller runs on the raspberry pi, but as I don't see the rpi as a reliable place for long term storage the graphite server is run on virtual machine elsewhere on the lan.
 
 3 temperature probes can be placed with one at the "hot side", "center", "cool side" and as the metrics go into our time series database we can get graphs for different periods of time quickly to visualize the temperature gradient that is vital to the care of reptiles.  I want to be able to have multiple years of data at 1 minute resolution and be more aware of things like seasonal variations in temperature.
