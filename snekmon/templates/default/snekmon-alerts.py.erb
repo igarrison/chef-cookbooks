@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import urllib2
+#import smtplib
+import prowlpy
+
+# CS = cold side, HS = hot side
+HSTOOHOT = 95
+HSTOOCOLD = 75
+CSTOOCOLD = 59
+HUMTOOLOW = 39
+RECIPIENTS = "<%= @email_recipient %>"
+SENDER = "<%= @email_sender %>"
+MAILSERVER = '<%= @mailserver_host %>'
+
+def sendProwl(mesg):
+    PROWLAPIKEY = '<%= @prowlapi_key %>'
+    p = prowlpy.Prowl(PROWLAPIKEY)
+    try:
+        p.add('ProwlPy', 
+            'Notification', 
+            mesg,
+            1, 
+            None, 
+            "<%= @graphite_url %>")
+    except Exception,msg:
+        print msg
+
+def sendEmail(subj,mesg):
+
+    # Import the email modules we'll need
+    from email.mime.text import MIMEText
+
+    msg = MIMEText(mesg)
+    msg['Subject'] = '%s' % subj
+    msg['From'] = '%s' % SENDER
+    msg['To'] = '%s' % RECIPIENTS
+
+    # Send the message via our own SMTP server, but don't include the
+    # envelope header.
+    s = smtplib.SMTP(MAILSERVER)
+    s.sendmail(SENDER, RECIPIENTS, msg.as_string())
+    s.quit()
+
+#-------------------------
+
+def avg(l):
+    # sum up entire array, divide by number of elements to get average
+    return (sum(l) / float(len(l)))
+
+hottemps = urllib2.urlopen("http://<%= @graphite_ip %>/render?target=system.pi.reptile_hottemperature&from=-1hours&format=raw").read().replace('|',',').replace('None','80.0').replace('\n','').split(',')
+# remove the first 4 elements of the list (time duration data not needed)
+del hottemps[0]
+del hottemps[0]
+del hottemps[0]
+del hottemps[0]
+# convert the strings in the array into floats
+avghotlasthour = int(avg(map(float, hottemps)))
+#print avghotlasthour
+
+if avghotlasthour >= HSTOOHOT:
+    mesg = "Hot side temperature is %d which is over threshold of %d.  This is too hot!" % (avghotlasthour, HSTOOHOT)
+    #sendEmail('PiSnakeEnv: Hot side too hot!',mesg)
+    sendProwl(mesg)
+
+if avghotlasthour <= HSTOOCOLD:
+    mesg = "Hot side temperature is %d which is under the threshold of %d.  80-85 should be the target.  Why are we so low?" % (avghotlasthour, HSTOOCOLD)
+    #sendEmail('PiSnakeEnv: Hot side too cold!',mesg)
+    sendProwl(mesg)
+
+coldtemps = urllib2.urlopen("http://<%= @graphite_ip %>/render?target=system.pi.reptile_coldtemperature&from=-1hours&format=raw").read().replace('|',',').replace('None','70.0').replace('\n','').split(',')
+# remove the first 4 elements of the list (time duration data not needed)
+del coldtemps[0]
+del coldtemps[0]
+del coldtemps[0]
+del coldtemps[0]
+# convert the strings in the array into floats
+avgcoldlasthour = int(avg(map(float, coldtemps)))
+#print avgcoldlasthour
+
+if avgcoldlasthour <= CSTOOCOLD:
+    mesg = "Cold side temperature is %d which is under the threshold of %d.  Around 70 should be the ideal target.  Why are we so low?" % (avgcoldlasthour, CSTOOCOLD)
+    #sendEmail('PiSnakeEnv: Cold side too cold!',mesg)
+    sendProwl(mesg)
+
+relhumidity = urllib2.urlopen("http://<%= @graphite_ip %>/render?target=system.pi.reptile_relativehumidity&from=-1hours&format=raw").read().replace('|',',').replace('None','51.0').replace('\n','').split(',')
+# remove the first 4 elements of the list (time duration data not needed)
+del relhumidity[0]
+del relhumidity[0]
+del relhumidity[0]
+del relhumidity[0]
+# convert the strings in the array into floats
+avghumiditylasthour = int(avg(map(float, relhumidity)))
+#print avghumiditylasthour
+
+if avghumiditylasthour <= HUMTOOLOW:
+    mesg = "Humidity is currently %d which is under the threshold of %d.  Between %40 and %60 should be the ideal target.  Why are we so low?" % (avghumiditylasthour, HUMTOOLOW)
+    #sendEmail('PiSnakeEnv: Humidity too low!',mesg)
+    sendProwl(mesg)

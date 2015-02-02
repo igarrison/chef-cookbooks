@@ -1,0 +1,17 @@
+default[:snekmon][:temper_gitrepo] = "https://github.com/padelt/temper-python.git"
+default[:snekmon][:tempered_gitrepo] = "https://github.com/edorfaus/TEMPered.git"
+default[:snekmon][:prowlpy_gitrepo] = "https://github.com/jacobb/prowlpy.git"
+default[:snekmon][:hidapi_gitrepo] = "https://github.com/signal11/hidapi.git"
+default[:snekmon][:temper_path] = "/srv/temper/"
+default[:snekmon][:tempered_path] = "/srv/TEMPered/"
+default[:snekmon][:prowlpy_path] = "/srv/prowlpy/"
+default[:snekmon][:hidapi_path] = "/srv/hidapi/"
+default[:snekmon][:graphite_address] = nil
+default[:snekmon][:graphite_searchrole] = "graphite-server"
+default[:snekmon][:graphite_port] = 2003
+default[:snekmon][:graphite_url] = "https://graphite.example.com"
+default[:snekmon][:poll_interval] = 60
+default[:snekmon][:email_recipient] = "user@example.com"
+default[:snekmon][:email_sender] = "postmaster@example.com"
+default[:snekmon][:mailserver_host] = "localhost"
+default[:snekmon][:prowlapi_key] = "s3kret"
