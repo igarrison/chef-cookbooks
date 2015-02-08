@@ -1,0 +1,30 @@
+---
+driver:
+  name: vagrant
+  customize:
+    memory: 512
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: debian-7.8
+  - name: ubuntu-14.04
+
+suites:
+  - name: poller
+    run_list:
+      - recipe[snekmon::poller]
+    attributes:
+      dev_mode: true
+      snekmon:
+        graphite_address: 10.10.10.10
+
+  - name: alerter
+    run_list:
+      - recipe[snekmon::alerter]
+    attributes:
+      dev_mode: true
+      snekmon:
+        prowlapi_key: 00s3kr3t00
+        graphite_address: 10.10.10.10

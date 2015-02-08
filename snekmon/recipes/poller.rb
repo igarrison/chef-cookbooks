@@ -16,7 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe "git"
+include_recipe "snekmon::common"
+include_recipe 'rsyslog'
 include_recipe 'runit::default'
 
 git "#{Chef::Config[:file_cache_path]}/temper" do
@@ -37,7 +38,7 @@ git "#{Chef::Config[:file_cache_path]}/hidapi" do
   action :checkout
 end
 
-packages = value_for_platform_family("debian" => ["python-usb", "python-setuptools", "libudev-dev", "libusb-1.0-0-dev", "libfox-1.6-dev", "autotools-dev", "autoconf", "automake", "libtool", "cmake"])
+packages = value_for_platform_family("debian" => ["python-usb", "libudev-dev", "libusb-1.0-0-dev", "libfox-1.6-dev", "autotools-dev", "autoconf", "automake", "libtool", "cmake"])
 
 packages.each do |pkg|
   package pkg
@@ -64,33 +65,14 @@ end
 
 bash "run TEMPered install" do
   cwd "#{Chef::Config[:file_cache_path]}/TEMPered"
-  code <<-EOF
+  code <<-'EOF'
   cmake .
   make
   make install
-  if [ -d /usr/local/lib/arm-linux-gnueabihf ] then
-    find /usr/local/lib/arm-linux-gnueabihf/ ! -type d -exec ln -s {} /usr/local/lib \;
-  fi
+  find /usr/local/lib -name "libtempered*" -exec ln -s {} /usr/local/lib \;
   ldconfig
   EOF
   not_if { ::File.exists?'/usr/local/bin/tempered' }
-end
-
-if node['snekmon']['graphite_address']
-  graphite_server = node['snekmon']['graphite_address']
-else
-  graphite_server = search(:node, "roles:#{node['snekmon']['graphite_searchrole']} AND chef_environment:#{node.chef_environment} AND NOT tags:no-monitor").first['ipaddress']
-end
-
-if graphite_server.nil?
-  Chef::Application.fatal!('The snekmon::default recipe was unable to determine the remote graphite server. Checked both the graphite_address and search!')
-end
-
-runit_service 'snekmon'
-
-service "snekmon" do
-  supports :status => true, :restart => true
-  action :nothing
 end
 
 template "/usr/local/bin/snekmon.py" do
@@ -98,10 +80,40 @@ template "/usr/local/bin/snekmon.py" do
   owner     'root'
   group     'root'
   mode      '0755'
-  notifies :restart, 'service[snekmon]'
   variables(
     :graphite_ip => graphite_server,
     :graphite_port => node['snekmon']['graphite_port'],
     :poll_interval => node['snekmon']['poll_interval']
   )
+end
+
+directory '/var/log/snekmon' do
+  owner "nobody"
+  group "root"
+  mode "0755"
+end
+
+runit_service 'snekmon' do
+  default_logger true
+  options :log_dir => '/var/log/snekmon'
+end
+
+service "snekmon" do
+  supports :status => true, :restart => true
+  action :start
+end
+
+template "/etc/logrotate.d/snekmon" do
+  source "logrotate-snekmon.erb"
+  owner  "nobody"
+  group  "root"
+  mode   "0644"
+end
+
+template "/etc/rsyslog.d/30-snekmon.conf" do
+  source "rsyslog-snekmon.conf.erb"
+  owner  "root"
+  group  "root"
+  mode   "0644"
+  notifies :restart, "service[rsyslog]"
 end

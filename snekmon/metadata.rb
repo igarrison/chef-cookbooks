@@ -12,3 +12,5 @@ supports 'ubuntu'
 depends "git"
 depends "runit"
 depends "cron"
+depends "rsyslog"
+depends "apt"

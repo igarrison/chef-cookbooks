@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: snekmon
-# Recipe:: default
+# Recipe:: common
 #
 # Author: Ian Garrison <garrison@technoendo.net>
 #
@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe "apt"
+include_recipe "git"
 
-# NOTE: This recipe does nothing intentionally, you must choose the 
-# snekmon::poller or snekmon::alerter recipes!
+package "build-essential"
+package "python-setuptools"

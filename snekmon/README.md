@@ -1,25 +1,39 @@
 Snekmon Cookbook for Chef
 ===========================
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/snekmon_system.png "Raspberry Pi Snake Monitoring and Alerting")
+
+The snekmon chef cookbook is a couple python scripts deployed via chef as part of an overengineered solution for long term historical monitoring and alerting of the temperature and humidity inside my cornsnake's vivarium.
+
+My goals were to visualize temperatures over different time periods as long as a few years and see the seasonal temperature changes between summer and winter.  I also wanted to get alerts to my smartphone so that when I was away from the house at work it could help reinforce awareness of when conditions might be uncomfortably hot or cold for my ectothermic friend.  I like chef and wanted to learn about test kitchen and serverspec and this looked like something that could easily be plugged into my existing graphite server.
+
+**WARNING**: This cookbook was created for my own use after my rpi's filesystem corrupted as a means to more quickly redeploy it.  Its tailored for my use, but if you know the basics of both chef and python you can make it suit your own use.
+
+Temperature and humidity are at the core of reptile keeping.  The idea here is that 3 temperature probes should be placed with one at the hot side, center, and cool side which allows us to visualize the temperature gradient within the vivarium.  Once metrics are collected its trivial to look at temperatures over different time periods.  You could take your snake to a vet with graphs from the last 15 days, last 6 weeks, last 18 months, and last 5 years -- your reptile husbandry is auditable over long periods of time.  
+
+Prowl Mobile Notifications
+--------------------------
+The mechanism by which push notifications are sent to your smartphone is with a prowlapp.com API key and alerter python script.
+
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/prowlnotify.png "Prowlapp Notification")
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/prowlapp.png "Prowlapp")
+
+Hardware Requirements and Costs
+---------------------
 ![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.jpg "Raspberry Pi Snake Monitoring and Alerting")
 
-The snekmon chef cookbook is for a very specific application where a raspberry pi B+ or better (4 usb ports required!) running Raspbian 7 has a USB wifi module, 2 USB temp probes, and a USB combo humidity/temp probe to collect metrics and send them to an existing graphite server.  This python poller script runs on the raspberry pi and the vital storage is all on the graphite server (not on the rpi for reasons of reliability).
+- Raspberry Pi (models B+ or 2, 4 USB ports required) to run the poller.  Cost: rpi2 should be around $35, $10 for a case, $10 for an edimax wifi adapter, $10 for micro USB adapter, $10 for a USB micro card reader to load Raspbian, $10 for a 16GB microSD card, another $10 for an HDMI cable -- Total ~$95.00 USD 
+- 2x TEMPer1 or Temper2 USB probes can be found on [Newegg](http://www.newegg.com/Product/Product.aspx?Item=9SIA3XT1D88504) for $22.09 each are supported by https://github.com/padelt/temper-python
+- 1x TEMPERHUM1v1.0 USB probe can be found on [Amazon](http://www.amazon.com/Generic-TEMPerHUM-Thermometer-Temperature-Recorder/dp/B00HWP8U44/) for $26.49 and is supported by https://github.com/edorfaus/TEMPered which depends on https://github.com/signal11/hidapi
+- PC Server, could be another box on the LAN, a virtual machine on a desktop or workstation that is always online, or an Amazon EC2 or other cloud compute server instance (~50/mo for an m3.medium EC2 instance).  This will be the graphite server which you are expected to setup on your own.  It can also run the alerter script which cookbook deploys.  There is even a [Hosted Graphite SaaS Provider](https://www.hostedgraphite.com/) with their smallest account being $19/mo.  I won't include cost of this item as it varies greatly depending on what you have or what you want.
+- Expect to spend as much as $170 on the rpi2 and probes, and more if you don't have reliable place to run a graphite server.  Its a bit costly, but there are no software costs and the rpi could be further expanded to capture pictures/video and other tasks.  If any components break they are relatively cheap and easy to replace.
 
-3 temperature probes can be placed with one at the "hot side", "center", "cool side" and as the metrics are stored in graphite we can visualize the temperature gradient that is vital to the care of reptiles.  I want to see things like seasonal variations in temperature.
-
-Aside from visualization we also want to get smartphone push alerts via prowlapp.com if the averate temps and humidity over the last hour are outside acceptable ranges.  This way on the first early days of summer I can be more mindful of spikes in temperature at home no matter where I am and just be aware of the problem.
-
-WARNING: This cookbook is for a very specific use and was created after my rpi's filesystem corrupted after 3 months of use.  This is a "quick & dirty" cookbook, there are no tests, its not using the best cookbook design patterns.  Its probably going to suck to use for anyone else but me.
-
-Requirements
-------------
-- Raspberry Pi B+ or better (runs poller)
-- 2x TEMPer1V1.4 modules are supported by https://github.com/padelt/temper-python
-- 1x TEMPERHUM1v1.0 module is supported by https://github.com/edorfaus/TEMPered which depends on https://github.com/signal11/hidapi
-- External Graphite Server (can run alerter).  I used https://github.com/opscode-cookbooks/oc-graphite and https://github.com/JonathanTron/chef-grafana (grafana is optional, its a front-end dashboard that can make graphite very pretty)
-- http://prowlapp.com account with an API key is supported by https://github.com/jacobb/prowlpy
+Software Requirements
+---------------------
+- A Graphite Server is needed to receive stats from the poller and to also run the alerter.  I used https://github.com/opscode-cookbooks/oc-graphite and https://github.com/JonathanTron/chef-grafana (grafana is optional, it makes graphite pretty).  This is the one thing that this cookbook does not setup for you.
+- http://prowlapp.com account with an API key is supported by https://github.com/jacobb/prowlpy.  Accounts are free.
 - Network accessible package and source repositories
 - Python was selected for the scripts as its the most ironic
-- A chef server on the network that all devices are bootstrapped to, or possibly using chef-zero/chef-solo without a chef server (untested)
+- A chef server reachable on the network or internet that your graphite server and raspberry pi are bootstrapped to.  If you don't already have a chef server [Hosted CHef](https://manage.chef.io/signup) provides the first five nodes for free so you don't have to run a server (which is free up to 25 nodes).
 
 Cookbook Dependencies
 ---------------------
@@ -29,15 +43,15 @@ Cookbook Dependencies
 
 Platform Support
 ----------------
-The following platforms have been tested:
+The following platforms have been tested with test kitchen and serverspec:
 
 ```
 |----------------+--------+---------|
 |                | poller | alerter |
 |----------------+--------+---------|
-| Raspbian 7     |   X    |         |
+| Raspbian 7     |   X    |    X    |
 |----------------+--------+---------|
-| ubuntu-14.04   |        |    X    |
+| ubuntu-14.04   |   X    |    X    |
 |----------------+--------+---------|
 ```
 
@@ -67,7 +81,7 @@ Attributes
     <td><tt>['snekmon']['graphite_port']</tt></td>
     <td>integer</td>
     <td>The port your graphite server accepts requests on.</td>
-    <td><tt>nil</tt></td>
+    <td><tt>2003</tt></td>
   </tr>
   <tr>
     <td><tt>['snekmon']['graphite_userurl']</tt></td>
@@ -80,12 +94,6 @@ Attributes
     <td>API key</td>
     <td>When you have a prowlapp.com account and have launched your smartphone prowl app and logged in to associate the device with your account you can retrieve your API key which is needed to push notifications to your smartphone.</td>
     <td><tt>s3kret</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['snekmon']['graphite_address']</tt></td>
-    <td>ipv4 address or hostname</td>
-    <td>For chef solo users or those who don't want to rely on search to find the graphite server in your chef organization you can use this attribute.</td>
-    <td><tt>nil</tt></td>
   </tr>
   <tr>
     <td><tt>['snekmon']['poll_interval']</tt></td>
@@ -122,15 +130,15 @@ Attributes
 Usage
 -----
 #### snekmon::default
-This recipe does nothing.  Do not use it!  It is a trick to hopefully be mindful that you need to choose a specific recipe and know their purposes.
+This recipe does nothing.  Do not use it!  It is a trick to hopefully be mindful that you need to choose either snekmon::poller or snekmon::alerter and understand their purposes.
 
 #### snekmon::poller
-For me this runs on a raspberry pi B+ running raspbian 7 with the 3 USB temp/humidity probes connected to it.  Runit does the process supervision in case it ever dies.  Normally it shouldn't log anything and you may want to uncomment print lines as needed to see output and debug further.  The raspberry pi device collects the metrics and sends them to an existing graphite server on the network.
+This runs on a raspberry pi with the 3 USB temp/humidity probes connected to it.  Runit does the process supervision and restarts it in case it ever dies.  Logs are in /var/log/snekmon. The raspberry pi device collects the metrics and sends them over the network to your graphite server.
 
 By default the poller runs on the pi every 60 seconds.  Technically it can run as frequently as every 10 seconds with nothing else running on the pi.
 
-#### snekmon::alerting
-This can run anywhere in your environment that can talk to your graphite server and prowlapp.com.  I run this right on the graphite server myself.  This probably could run on the raspberry pi but I prefer to be very careful about not putting too much load on it.  Right now only prowlapp.com push notifications to a smartphone is supported.  For alerting to work you are expected to already have an account on prowlapp.com and have provided your API key as an attribute `prowlapi_key`.  This script queries all the reptile environment metrics over the last hour and sends the prowl alerts for violations outside the range set by the attributes in this cookbook.
+#### snekmon::alerter
+This can run anywhere in your environment that can talk to your graphite server and prowlapp.com for sending push notifications to your smartphone.  I run the alerter right on my graphite server, but you could run it on the raspberry pi as well.  Right now only prowlapp.com push notifications to a smartphone is supported.  For alerting to work you are expected to already have an account on prowlapp.com and have provided your API key as an attribute `prowlapi_key`.  This script queries all the reptile environment metrics over the last hour and sends the prowl alerts for violations outside the range set in chef attributes.
 
 In addition to putting the poller and/or alerting recipe on a node there probably are some other attributes you will want to overrite (see: attributes for the rest):
 ```json
@@ -175,7 +183,7 @@ limitations under the License.
 
 Graphite and Grafana?
 ---------------------
-Yes, you are expected to have already setup a graphite server on your own.  You do not need to put a grafana or other dashboard in front of it if you don't want to.  The poller script just needs to be able to submit stats to the graphite port, and the alerting script needs to hit the [http api](http://graphite.readthedocs.org/en/1.0/url-api.html) to make requests similar to the one below (except using python http libraries instead of curl):
+Yes, you are expected to have setup or aquired a graphite server on your own.  You do not need to put a grafana or other dashboard in front of it if you don't want to.  The poller script just needs to be able to submit stats to the graphite port, and the alerting script needs to hit the [http api](http://graphite.readthedocs.org/en/1.0/url-api.html) to make requests similar to the one below (except using python http libraries instead of curl):
 
 ```
 $ curl "http://localhost/render?target=system.pi.reptile_hottemperature&from=-1hours&format=raw"
@@ -187,7 +195,7 @@ system.pi.reptile_hottemperature,1409887440,1409891040,60|80.7,80.7,80.7,80.7,
 80.7,80.7,80.7,80.7,80.7,83.5,84.8,85.9
 ```
 
-You do not need to put a grafana or other dashboard in front of graphite, however as you can see below it can make for some pretty dashboards which you can dynamically zoom around in:
+If you do put grafana in front of graphite you can see it can make for some pretty dashboards:
 ![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/grafana_dashboard.png "Grafana Dashboard front end for Graphite to visualize Reptile Environmentals")
 
 Additional Notes on Probes

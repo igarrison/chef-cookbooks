@@ -1,0 +1,10 @@
+/var/log/snekmon/snekmon.log {
+        daily
+        missingok
+        rotate 7
+        compress
+        notifempty
+        postrotate
+                reload rsyslog >/dev/null 2>&1 || true
+        endscript
+}

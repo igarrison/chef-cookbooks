@@ -1,0 +1,61 @@
+{
+  "chef_type": "node",
+  "name": "graphite-server",
+  "chef_environment": "_default",
+  "normal": {
+  },
+  "automatic": {
+    "kernel": {
+      "name": "Linux",
+      "machine": "x86_64",
+      "os": "GNU/Linux"
+    },
+    "os": "linux",
+    "os_version": "3.5.0-23-generic",
+    "root_group": "root",
+    "current_user": "vagrant",
+    "hostname": "server-ubuntu-1204",
+    "fqdn": "server-ubuntu-1204.vagrantup.com",
+    "domain": "vagrantup.com",
+    "ipaddress": "10.0.1.5",
+    "macaddress": "08:00:27:F9:09:1F",
+    "ip6address": "fe80::a00:27ff:fef9:91f",
+    "virtualization": {
+      "system": "vbox",
+      "role": "guest"
+    },
+    "ohai_time": 1389202858.7629967,
+    "lsb": {
+      "id": "Ubuntu",
+      "release": "12.04",
+      "codename": "precise",
+      "description": "Ubuntu 12.04.2 LTS"
+    },
+    "platform": "ubuntu",
+    "platform_version": "12.04",
+    "platform_family": "debian",
+    "cpu": {
+      "total": 1,
+      "real": 0
+    },
+    "memory": {
+      "total": "244960kB",
+      "free": "16628kB"
+    },
+    "uptime_seconds": 390,
+    "uptime": "6 minutes 30 seconds",
+    "idletime_seconds": 343,
+    "idletime": "5 minutes 43 seconds",
+    "recipes": [
+    ],
+    "roles": [
+      "graphite-server"
+    ]
+  },
+  "recipe": [
+    "graphite::server"
+  ],
+  "run_list": [
+    "role[graphite-server]"
+  ]
+}

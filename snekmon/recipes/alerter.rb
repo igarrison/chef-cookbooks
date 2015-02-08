@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: snekmon
-# Recipe:: alerting
+# Recipe:: alerter
 #
 # Author: Ian Garrison <garrison@technoendo.net>
 #
@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe "git"
+include_recipe "snekmon::common"
 
 git "#{Chef::Config[:file_cache_path]}/prowlpy" do
   repository 'https://github.com/jacobb/prowlpy.git'
@@ -33,17 +33,7 @@ bash "run prowlpy install" do
   not_if { ::File.exists?'/var/run/prowlpy.ftr' }
 end
 
-if node['snekmon']['graphite_address']
-  graphite_server = node['snekmon']['graphite_address']
-else
-  graphite_server = search(:node, "roles:#{node['snekmon']['graphite_searchrole']} AND chef_environment:#{node.chef_environment} AND NOT tags:no-monitor").first['ipaddress']
-end
-
-if graphite_server.nil?
-  Chef::Application.fatal!('The snekmon::default recipe was unable to determine the remote graphite server. Checked both the graphite_address and search!')
-end
-
-template "/usr/local/bin/snekmon-alerts.py" do
+template "/usr/local/bin/snekmon-alerter.py" do
   source 'snekmon-alerts.py.erb'
   owner     'root'
   group     'root'
@@ -59,8 +49,8 @@ template "/usr/local/bin/snekmon-alerts.py" do
   )
 end
 
-cron_d 'snekmon-alert' do
+cron_d 'snekmon-alerter' do
   minute  '00,30'
-  command '/usr/local/bin/snekmon-alerts.py'
+  command '/usr/local/bin/snekmon-alerter.py'
   user    'root'
 end
