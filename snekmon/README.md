@@ -18,13 +18,12 @@ The mechanism by which push notifications are sent to your smartphone is with a 
 
 Hardware Requirements and Costs
 ---------------------
-![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.png "Raspberry Pi Snake Monitoring and Alerting")
-
 - Raspberry Pi (models B+ or 2, 4 USB ports required) to run the poller.  Cost: rpi2 should be around $35, $10 for a case, $10 for an edimax wifi adapter, $10 for micro USB adapter, $10 for a USB micro card reader to load Raspbian, $10 for a 16GB microSD card, another $10 for an HDMI cable -- Total ~$95.00 USD 
 - 2x TEMPer1 or Temper2 USB probes can be found on [Newegg](http://www.newegg.com/Product/Product.aspx?Item=9SIA3XT1D88504) for $22.09 each are supported by https://github.com/padelt/temper-python
 - 1x TEMPERHUM1v1.0 USB probe can be found on [Amazon](http://www.amazon.com/Generic-TEMPerHUM-Thermometer-Temperature-Recorder/dp/B00HWP8U44/) for $26.49 and is supported by https://github.com/edorfaus/TEMPered which depends on https://github.com/signal11/hidapi
-- PC Server, could be another box on the LAN, a virtual machine on a desktop or workstation that is always online, or an Amazon EC2 or other cloud compute server instance (~50/mo for an m3.medium EC2 instance).  This will be the graphite server which you are expected to setup on your own.  It can also run the alerter script which cookbook deploys.  There is even a [Hosted Graphite SaaS Provider](https://www.hostedgraphite.com/) with their smallest account being $19/mo.  I won't include cost of this item as it varies greatly depending on what you have or what you want.
+- PC Server, could be another box on the LAN, a virtual machine on a desktop or workstation that is always online, or an Amazon EC2 or other cloud compute server instance (~50/mo for an m3.medium EC2 instance).  This will be the graphite server which you are expected to setup on your own.  The graphite server can also run the alerter script that this cookbook deploys.  There is even a [Hosted Graphite SaaS Provider](https://www.hostedgraphite.com/) with their smallest account being $19/mo although I haven't tested it.  I won't include cost of this item as it varies greatly depending on what you have or what you want.
 - Expect to spend as much as $170 on the rpi2 and probes, and more if you don't have reliable place to run a graphite server.  Its a bit costly, but there are no software costs and the rpi could be further expanded to capture pictures/video and other tasks.  If any components break they are relatively cheap and easy to replace.
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.png "Raspberry Pi Snake Monitoring and Alerting")
 
 Software Requirements
 ---------------------
@@ -32,7 +31,7 @@ Software Requirements
 - http://prowlapp.com account with an API key is supported by https://github.com/jacobb/prowlpy.  Accounts are free.
 - Network accessible package and source repositories
 - Python was selected for the scripts as its the most ironic
-- A chef server reachable on the network or internet that your graphite server and raspberry pi are bootstrapped to.  If you don't already have a chef server [Hosted CHef](https://manage.chef.io/signup) provides the first five nodes for free so you don't have to run a server (which is free up to 25 nodes).
+- A chef server reachable on the network or internet that your graphite server and raspberry pi are bootstrapped to.  If you don't already have a chef server [Hosted Chef](https://manage.chef.io/signup) provides the first five nodes for free so you don't have to run a server (which is free up to 25 nodes).
 
 Cookbook Dependencies
 ---------------------
@@ -122,7 +121,7 @@ Attributes
   </tr>
   <tr>
     <td><tt>['snekmon']['center_lowhumid']</tt></td>
-    <td>percentage of %100</td>
+    <td>percentage</td>
     <td>This probe I put in the humid hide in the center of the vivariumr.  For my corn snake %40+ humidity is sufficient for healthy shedding but with the humid hide I can offer higher humidity in a localized area in the viv the snake can use as he wants.</td>
     <td><tt>39</tt></td>
   </tr>
