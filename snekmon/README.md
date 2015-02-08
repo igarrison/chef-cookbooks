@@ -14,12 +14,11 @@ Prowl Mobile Notifications
 --------------------------
 The mechanism by which push notifications are sent to your smartphone is with a prowlapp.com API key and alerter python script.
 
-![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/prowlnotify.png "Prowlapp Notification")
 ![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/prowlapp.png "Prowlapp")
 
 Hardware Requirements and Costs
 ---------------------
-![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.jpg "Raspberry Pi Snake Monitoring and Alerting")
+![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/vivarium_empty.png "Raspberry Pi Snake Monitoring and Alerting")
 
 - Raspberry Pi (models B+ or 2, 4 USB ports required) to run the poller.  Cost: rpi2 should be around $35, $10 for a case, $10 for an edimax wifi adapter, $10 for micro USB adapter, $10 for a USB micro card reader to load Raspbian, $10 for a 16GB microSD card, another $10 for an HDMI cable -- Total ~$95.00 USD 
 - 2x TEMPer1 or Temper2 USB probes can be found on [Newegg](http://www.newegg.com/Product/Product.aspx?Item=9SIA3XT1D88504) for $22.09 each are supported by https://github.com/padelt/temper-python
@@ -37,6 +36,8 @@ Software Requirements
 
 Cookbook Dependencies
 ---------------------
+- apt
+- rsyslog
 - runit
 - git
 - cron
