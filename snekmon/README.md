@@ -133,62 +133,61 @@ Some of these steps need to be filled out.  I'm making some assumptions that the
 1. Put the latest Raspbian or Ubuntu onto your Raspberry Pi B+ or RPI2.  Get the wifi network working.  Attach the 2 USB temperature probes and the USB temp/humidity probe.
 2. Install Ruby 2.1 using rbenv.  I forget the commands, this takes a few hours to compile.
 3. Install the ruby chef-client on the Raspberry Pi.
-``
-sudo gem install chef
-``
+
+    ``sudo gem install chef``
 4. Bootstrap the rpi against your chef organization from your workstation using knife (not getting into chef workstation setup).
-```
-knife bootstrap 192.168.1.95 --sudo -x ubuntu -N pi
-```
+
+    ``knife bootstrap 192.168.1.95 --sudo -x ubuntu -N pi``
 5. Upload the snekmon cookbook and its cookbook dependancies.
-```
-git clone https://github.com/igarrison/chef-cookbooks.git
-cd chef-cookbooks/snekmon
-knife cookbook upload snekmon
-cd cookbooks
-knife cookbook site download git
-tar zxvf git-2.7.0.tar.gz
-knife cookbook upload git
-```
+
+    ```
+    git clone https://github.com/igarrison/chef-cookbooks.git
+    cd chef-cookbooks/snekmon
+    knife cookbook upload snekmon
+    cd cookbooks
+    knife cookbook site download git
+    tar zxvf git-2.7.0.tar.gz
+    knife cookbook upload git
+    ```
 6. Edit your pi node and add the poller recipe.
-```
-knife node edit pi
-# add recipe[snekmon::poller]
-```
+
+    ```
+    knife node edit pi
+    # add recipe[snekmon::poller]
+    ```
 7. Make a json role for the snekmon-alerter and have it look something like this
-```
-knife role create snekmon
-# add in the snekmon override_attributes and add the alerter to the run_list
-{
-  "name": "snekmon",
-  "description": "",
-  "json_class": "Chef::Role",
-  "default_attributes": {
 
-  },
-  "override_attributes": {
-    "snekmon": {
-      "graphite_userurl": "https://grafana.example.com",
-      "prowlapi_key": "0101sekret010101"
-    },
-  },
-  "chef_type": "role",
-  "run_list": [
-    "recipe[snekmon::alerter]"
-  ],
-  "env_run_lists": {
-
-  }
-}
+    ```
+    knife role create snekmon
+    # add in the snekmon override_attributes and add the alerter to the run_list
+    {
+      "name": "snekmon",
+      "description": "",
+      "json_class": "Chef::Role",
+      "default_attributes": {
+    
+      },
+      "override_attributes": {
+        "snekmon": {
+          "graphite_userurl": "https://grafana.example.com",
+          "prowlapi_key": "0101sekret010101"
+        },
+      },
+      "chef_type": "role",
+      "run_list": [
+        "recipe[snekmon::alerter]"
+      ],
+      "env_run_lists": {
+    
+      }
+    }
 ```
 8. If you have a graphite server apply `role[snekmon]` to your graphite server's chef node, otherwise apply it to your rpi2 node.  If you are trying to use a hosted graphite server you might have to use the `graphite_address` and `graphite_port` attributes.
-```
-knife node run_list add graphite role[snekmon]
-```
+
+    ``knife node run_list add graphite role[snekmon]``
 9. Run chef-client to converge the snekmon cookbook changes onto your graphite-server and raspberry pi.
-```
-sudo chef-client
-```
+
+    ``sudo chef-client``
 10. You should be able to check /var/log/snekmon/current on the raspberry pi to see if statistics are coming in.  Otherwise run /usr/local/tempered and /usr/local/bin/temper-poll to confirm your USB probes are working as expected.
 
 Usage
