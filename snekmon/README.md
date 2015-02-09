@@ -12,7 +12,7 @@ Temperature and humidity are at the core of reptile keeping.  The idea here is t
 
 Prowl Mobile Notifications
 --------------------------
-The mechanism by which push notifications are sent to your smartphone is with a prowlapp.com API key and alerter python script.
+The mechanism by which push notifications are sent to your smartphone is with a prowlapp.com API key and alerter python script.  Accounts are free.
 
 ![Alt text](https://github.com/igarrison/chef-cookbooks/blob/master/snekmon/images/prowlapp.png "Prowlapp")
 
@@ -137,7 +137,7 @@ Some of these steps need to be filled out.  I'm making some assumptions that the
     ``sudo gem install chef``
 4. Bootstrap the rpi against your chef organization from your workstation using knife (not getting into chef workstation setup).
 
-    ``knife bootstrap 192.168.1.95 --sudo -x ubuntu -N pi``
+    ``knife bootstrap 192.168.1.95 --sudo -x myusername -N pi``
 5. Upload the snekmon cookbook and its cookbook dependancies.
 
     ```
