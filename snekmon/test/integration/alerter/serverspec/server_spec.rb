@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'snekmon.py should be configured per node attributes' do
+describe 'snekmon-alerter.py should be configured per node attributes' do
   describe file('/usr/local/bin/snekmon-alerter.py') do
     it { should be_file }
     its(:content) { should match(/HSTOOHOT = 90/) }

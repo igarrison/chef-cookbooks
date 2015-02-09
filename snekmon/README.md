@@ -36,7 +36,6 @@ Software Requirements
 Cookbook Dependencies
 ---------------------
 - apt
-- rsyslog
 - runit
 - git
 - cron

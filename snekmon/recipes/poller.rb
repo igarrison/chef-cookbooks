@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 include_recipe "snekmon::common"
-include_recipe 'rsyslog'
 include_recipe 'runit::default'
 
 git "#{Chef::Config[:file_cache_path]}/temper" do
@@ -75,8 +74,8 @@ bash "run TEMPered install" do
   not_if { ::File.exists?'/usr/local/bin/tempered' }
 end
 
-template "/usr/local/bin/snekmon.py" do
-  source 'snekmon.py.erb'
+template "/usr/local/bin/snekmon-poller.py" do
+  source 'snekmon-poller.py.erb'
   owner     'root'
   group     'root'
   mode      '0755'
@@ -88,32 +87,16 @@ template "/usr/local/bin/snekmon.py" do
 end
 
 directory '/var/log/snekmon' do
-  owner "nobody"
+  owner "root"
   group "root"
   mode "0755"
 end
 
 runit_service 'snekmon' do
   default_logger true
-  options :log_dir => '/var/log/snekmon'
 end
 
 service "snekmon" do
   supports :status => true, :restart => true
   action :start
-end
-
-template "/etc/logrotate.d/snekmon" do
-  source "logrotate-snekmon.erb"
-  owner  "nobody"
-  group  "root"
-  mode   "0644"
-end
-
-template "/etc/rsyslog.d/30-snekmon.conf" do
-  source "rsyslog-snekmon.conf.erb"
-  owner  "root"
-  group  "root"
-  mode   "0644"
-  notifies :restart, "service[rsyslog]"
 end

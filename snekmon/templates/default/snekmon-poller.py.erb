@@ -5,10 +5,14 @@ import socket
 import time
 import subprocess
 import re
+import sys
  
 CARBON_SERVER = '<%= @graphite_ip %>'
 CARBON_PORT = <%= @graphite_port %>
 DELAY = <%= @poll_interval %>
+
+print "Starting snekmon-poller.py"
+sys.stdout.flush()
  
 def get_humidity():
     proc = subprocess.Popen(["/usr/local/bin/tempered --scale Fahrenheit"], stdout=subprocess.PIPE, shell=True)
@@ -29,7 +33,8 @@ def get_temps():
     return (TEMP3, TEMP4)
  
 def send_msg(message):
-    print 'sending message:\n%s' % message
+    print '%s' % message
+    sys.stdout.flush()
     sock = socket.socket()
     sock.connect((CARBON_SERVER, CARBON_PORT))
     sock.sendall(message)

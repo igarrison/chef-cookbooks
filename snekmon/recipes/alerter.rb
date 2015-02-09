@@ -34,7 +34,7 @@ bash "run prowlpy install" do
 end
 
 template "/usr/local/bin/snekmon-alerter.py" do
-  source 'snekmon-alerts.py.erb'
+  source 'snekmon-alerter.py.erb'
   owner     'root'
   group     'root'
   mode      '0755'
