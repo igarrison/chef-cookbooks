@@ -6,7 +6,7 @@ The snekmon chef cookbook is a couple python scripts deployed via chef as part o
 
 My goals were to visualize temperatures over different time periods as long as a few years and see the seasonal temperature changes between summer and winter.  I also wanted to get alerts to my smartphone so that when I was away from the house at work it could help reinforce awareness of when conditions might be uncomfortably hot or cold for my ectothermic friend.  I like chef and wanted to learn about test kitchen and serverspec and this looked like something that could easily be plugged into my existing graphite server.
 
-**WARNING**: This cookbook was created for my own use after my rpi's filesystem corrupted as a means to more quickly redeploy it.  Its tailored for my use, but if you know the basics of both chef and python you can make it suit your own use.
+**NOTE**: This cookbook was created for my own use after my rpi's filesystem corrupted as a means to more quickly redeploy it.  Its tailored for my use, but if you know the basics of both chef and python you could add USB hubs and run probes to an entire rack system of reptiles.
 
 Temperature and humidity are at the core of reptile keeping.  The idea here is that 3 temperature probes should be placed with one at the hot side, center, and cool side which allows us to visualize the temperature gradient within the vivarium.  Once metrics are collected its trivial to look at temperatures over different time periods.  You could take your snake to a vet with graphs from the last 15 days, last 6 weeks, last 18 months, and last 5 years -- your reptile husbandry is auditable over long periods of time.  
 
@@ -203,7 +203,7 @@ By default the poller runs on the pi every 60 seconds.  Technically it can run a
 #### snekmon::alerter
 This can run anywhere in your environment that can talk to your graphite server and prowlapp.com for sending push notifications to your smartphone.  I run the alerter right on my graphite server, but you could run it on the raspberry pi as well.  Right now only prowlapp.com push notifications to a smartphone is supported.  For alerting to work you are expected to already have an account on prowlapp.com and have provided your API key as an attribute `prowlapi_key`.  This script queries all the reptile environment metrics over the last hour and sends the prowl alerts for violations outside the range set in chef attributes.
 
-In addition to putting the poller and/or alerting recipe on a node there probably are some other attributes you will want to overrite (see: attributes for the rest):
+In addition to putting the poller and/or alerter recipe on a node there probably are some other attributes you will want to overrite (see: attributes for the rest):
 ```json
 {
   "override_attributes": {
@@ -214,7 +214,7 @@ In addition to putting the poller and/or alerting recipe on a node there probabl
   },
   "run_list": [
     "recipe[snekmon::poller]",
-    "recipe[snekmon::alerting]"
+    "recipe[snekmon::alerter]"
   ]
 }
 ```
@@ -246,7 +246,7 @@ limitations under the License.
 
 Graphite and Grafana?
 ---------------------
-Yes, you are expected to have setup or aquired a graphite server on your own.  You do not need to put a grafana or other dashboard in front of it if you don't want to.  The poller script just needs to be able to submit stats to the graphite port, and the alerting script needs to hit the [http api](http://graphite.readthedocs.org/en/1.0/url-api.html) to make requests similar to the one below (except using python http libraries instead of curl):
+Yes, you are expected to have setup or aquired a graphite server on your own.  You do not need to put a grafana or other dashboard in front of it if you don't want to.  The poller script just needs to be able to submit stats to the graphite port, and the alerter script needs to hit the [http api](http://graphite.readthedocs.org/en/1.0/url-api.html) to make requests similar to the one below (except using python http libraries instead of curl):
 
 ```
 $ curl "http://localhost/render?target=system.pi.reptile_hottemperature&from=-1hours&format=raw"
