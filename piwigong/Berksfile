@@ -1,0 +1,13 @@
+source "https://supermarket.chef.io"
+metadata
+
+# Create a method helper for "internal" cookbooks in the cookbooks directory
+def internal_cookbook(name, version = '>= 0.0.0', options = {})
+  cookbook name, version, { :path => "../#{name}" }.merge(options)
+end
+
+#cookbook "httpd", "~> 0.2"
+#cookbook "postfix", "~> 3.1.2"
+#internal_cookbook "apache2"
+#internal_cookbook "aws"
+internal_cookbook "httpd"
