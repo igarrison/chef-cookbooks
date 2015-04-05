@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "httpd": "~> 0.2",
-    "mysql": "~> 6.0"
+    "mysql": "~> 6.0",
+    "database": "~> 4.0"
   },
   "recommendations": {
   },

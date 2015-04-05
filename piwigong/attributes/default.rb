@@ -1,9 +1,12 @@
 # Database
-#default[:piwigo][:dbname] = "piwigodb"
-#default[:piwigo][:dbuser] = "piwigouser"
-#default[:piwigo][:dbhost] = "localhost"
+default[:piwigo][:dbname] = "piwigodb"
+default[:piwigo][:dbuser] = "piwigouser"
+default[:piwigo][:dbhost] = "localhost"
 #default[:piwigo][:dbrole] = "mysql-master"
 #default[:piwigo][:uselocalmysqld] = true
+default[:piwigo][:dbrootpass] = "unsecurepassword1"
+default[:piwigo][:dbuserpass] = "unsecurepassword2"
+#set_unless[:piwigo][:adminpass] = secure_password
 
 # Web + SSL
 default[:piwigo][:wwwname] = "piwigo.example.com"

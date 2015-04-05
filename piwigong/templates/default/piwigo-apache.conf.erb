@@ -12,6 +12,8 @@
   <% end -%>
 
   <Directory <%= node['piwigo']['wwwdir'] %>/current>
+        AddType application/x-httpd-php .php
+        DirectoryIndex index.php
 	Options FollowSymLinks
 	AllowOverride FileInfo Options
 	Order allow,deny

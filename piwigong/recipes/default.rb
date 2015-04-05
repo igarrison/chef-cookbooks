@@ -34,7 +34,7 @@ end
 end
 
 link "#{node[:piwigo][:wwwdir]}/current" do
-  to "piwigo-#{node[:piwigo][:version]}"
+  to "piwigo-#{node[:piwigo][:version]}/piwigo"
   not_if { ::File.symlink?"#{node[:piwigo][:wwwdir]}/current" }
 end
 
@@ -71,7 +71,8 @@ end
 mysql_service 'default' do
   port '3306'
   version '5.6'
-  initial_root_password 'changeme'
+  initial_root_password node[:piwigo][:dbrootpass]
+  #initial_root_password 'changeme'
   action [:create, :start]
 end
 
@@ -92,6 +93,29 @@ execute 'unzip-piwigo' do
   command "unzip #{node[:piwigo][:wwwdir]}/piwigo-#{node[:piwigo][:version]}.zip -d piwigo-#{node[:piwigo][:version]}"
   not_if { File.exists?("#{node[:piwigo][:wwwdir]}/piwigo-#{node[:piwigo][:version]}") }
 end
+
+#include_recipe "database"
+
+connection_info = {:host => node[:piwigo][:dbhost], :username => 'root', :password => node[:piwigo][:dbrootpass]}
+
+# create database
+mysql_database node[:piwigo][:dbname] do
+  connection connection_info
+  action :create
+end
+
+# grant all privilages on the database
+mysql_database_user node[:piwigo][:dbuser] do
+  connection connection_info
+  database_name node[:piwigo][:dbname]
+  password node[:piwigo][:dbuserpass]
+  action :grant
+end
+
+# Auto Generated Passwords stored in Node Data
+#::Chef::Node.send(:include, Opscode::OpenSSL::Password)
+#set_unless[:piwigo][:dbpass] = secure_password
+#set_unless[:piwigo][:adminpass] = secure_password
 
 # create database, user, grants, installs php and uses it to install the db 
 # schema, then set admin password
