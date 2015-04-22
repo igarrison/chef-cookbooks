@@ -16,7 +16,7 @@ depends "mysql" '~> 6.0'
 #depends "apache2"
 #depends "mysql"
 #depends "openssl"
-depends "database" '~> 4.0'
+#depends "database" '~> 4.0'
 #depends "apt"
 #depends "chef-vault"
 #depends "opscode-backup"

@@ -1,9 +1,9 @@
 <?php
 $conf['dblayer'] = 'mysqli';
-$conf['db_base'] = 'piwigodb';
-$conf['db_user'] = 'piwigouser';
-$conf['db_password'] = '';
-$conf['db_host'] = 'localhost';
+$conf['db_base'] = '<%= node['piwigo']['dbname'] %>';
+$conf['db_user'] = '<%= node['piwigo']['dbuser'] %>';
+$conf['db_password'] = '<%= node['piwigo']['dbuserpass'] %>';
+$conf['db_host'] = '<%= node['piwigo']['dbhost'] %>';
 
 $prefixeTable = 'piwigo_';
 

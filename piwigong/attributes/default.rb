@@ -1,21 +1,25 @@
 # Database
-default[:piwigo][:dbname] = "piwigodb"
-default[:piwigo][:dbuser] = "piwigouser"
-default[:piwigo][:dbhost] = "localhost"
+default[:piwigo][:dbname] = 'piwigodb'
+default[:piwigo][:dbuser] = 'piwigouser'
+default[:piwigo][:dbhost] = 'localhost'
 #default[:piwigo][:dbrole] = "mysql-master"
 #default[:piwigo][:uselocalmysqld] = true
-default[:piwigo][:dbrootpass] = "unsecurepassword1"
-default[:piwigo][:dbuserpass] = "unsecurepassword2"
+default[:piwigo][:dbrootpass] = 'unsecurepassword1'
+default[:piwigo][:dbuserpass] = 'unsecurepassword2'
+default[:piwigo][:webadminpass] = 'unsecurepassword3'
+default[:piwigo][:webadminemail] = 'postmaster@example.com'
+default[:piwigo][:webadminuser] = 'admin'
+
 #set_unless[:piwigo][:adminpass] = secure_password
 
 # Web + SSL
-default[:piwigo][:wwwname] = "piwigo.example.com"
-default[:piwigo][:wwwdir] = "/var/www/piwigo"
-default[:piwigo][:adminemail] = "postmaster@example.com"
+default[:piwigo][:wwwname] = 'piwigo.example.com'
+default[:piwigo][:wwwdir] = '/var/www/piwigo'
+default[:piwigo][:adminemail] = 'postmaster@example.com'
 #default[:piwigo][:webserver_apache2] = true
 default[:piwigo][:apachessl] = false
-#default[:piwigo][:sslcertmode] = "wildcard"
-default[:piwigo][:log_dir] = "/var/log/piwigo"
+#default[:piwigo][:sslcertmode] = 'wildcard'
+default[:piwigo][:log_dir] = '/var/log/apache2-default'
 
 #case node[:piwigo][:sslcertmode]
 #when "wwwhostname"
@@ -31,8 +35,8 @@ default[:piwigo][:log_dir] = "/var/log/piwigo"
 #end
 
 # Core and Contrib
-default[:piwigo][:version] = "2.7.3"
-default[:piwigo][:zipurl] = "http://piwigo.org/download/dlcounter.php?code=2.7.1"
+default[:piwigo][:version] = '2.7.4'
+default[:piwigo][:zipurl] = 'http://piwigo.org/download/dlcounter.php?code=2.7.4'
 
 #default[:piwigo][:backup_dir] = "/var/backups/piwigo"
 #default[:piwigo][:backup_schedule] = "05 23 * 1 *"

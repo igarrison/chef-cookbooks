@@ -1,0 +1,9 @@
+# Grants restricted to dbhost are not used by default
+#CREATE USER '<%= node['piwigo']['dbuser'] %>'@'<%= node['piwigo']['dbhost'] %>' IDENTIFIED by '<%= node['piwigo']['dbuserpass'] %>';
+#GRANT SELECT,INSERT,UPDATE,DELETE on <%= node['piwigo']['dbname'] %>.* TO '<%= node['piwigo']['dbuser'] %>'@'<%= node['piwigo']['dbhost'] %>';
+
+# Grants unrestricted by dbhost are the default
+CREATE USER '<%= node['piwigo']['dbuser'] %>'@'%' IDENTIFIED by '<%= node['piwigo']['dbuserpass'] %>';
+GRANT SELECT,INSERT,UPDATE,DELETE on <%= node['piwigo']['dbname'] %>.* TO '<%= node['piwigo']['dbuser'] %>'@'%';
+
+FLUSH PRIVILEGES;

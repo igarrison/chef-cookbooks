@@ -3,13 +3,16 @@
   ServerName    <%= node['piwigo']['wwwname'] %>
   ServerAlias	<%= node[:fqdn] %>
   DocumentRoot	<%= node['piwigo']['wwwdir'] %>/current
+  ErrorLog      <%= node['piwigo']['log_dir'] %>/piwigo_error.log
+  LogFormat     "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+  CustomLog     <%= node['piwigo']['log_dir'] %>/piwigo_access.log combined
 
-  <% if node['piwigo']['apachessl'] -%>  
-  # ensure HTTPS is forced especially for authentication
-  RewriteEngine On
-  RewriteCond %{HTTPS} off
-  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
-  <% end -%>
+  #<% if node['piwigo']['apachessl'] -%>  
+  ## ensure HTTPS is forced especially for authentication
+  #RewriteEngine On
+  #RewriteCond %{HTTPS} off
+  #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+  #<% end -%>
 
   <Directory <%= node['piwigo']['wwwdir'] %>/current>
         AddType application/x-httpd-php .php
@@ -31,47 +34,43 @@
     Deny from all
     Allow from 127.0.0.1
   </Location>
-
-  LogLevel info
-  ErrorLog <%= node['piwigo']['log_dir'] %>/piwigo_error.log
-  CustomLog <%= node['piwigo']['log_dir'] %>/piwigo_access.log combined
 </VirtualHost>
 
-<% if node['piwigo']['apachessl'] -%>
-<VirtualHost *:443>
-  ServerAdmin	<%= node['piwigo']['adminemail'] %>
-  ServerName    <%= node['piwigo']['wwwname'] %>
-  ServerAlias   <%= node[:fqdn] %>
-  DocumentRoot  <%= node['piwigo']['wwwdir'] %>/current
-
-  <Directory <%= node['piwigo']['wwwdir'] %>/current>
-	Options FollowSymLinks
-	AllowOverride FileInfo Options
-	Order allow,deny
-	Allow from all
-  </Directory>
-
-  <Directory />
-        Options FollowSymLinks
-        AllowOverride None
-  </Directory>
-
-  <Location /server-status>
-    SetHandler server-status
-    Order Deny,Allow
-    Deny from all
-    Allow from 127.0.0.1
-  </Location>
-
-  SSLEngine on
-  SSLProtocol -ALL +SSLv3 +TLSv1
-  SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
-  SSLCertificateFile <%= node[:piwigo][:sslcertfile] %>
-  SSLCertificateKeyFile <%= node[:piwigo][:sslkeyfile] %>
-  SSLCertificateChainFile <%= node[:piwigo][:sslchainfile] %>
-
-  LogLevel info
-  ErrorLog <%= node['piwigo']['log_dir'] %>/piwigo_error.log
-  CustomLog <%= node['piwigo']['log_dir'] %>/piwigo_access.log combined
-</VirtualHost>
-<% end -%>
+#<% if node['piwigo']['apachessl'] -%>
+#<VirtualHost *:443>
+#  ServerAdmin	<%= node['piwigo']['adminemail'] %>
+#  ServerName    <%= node['piwigo']['wwwname'] %>
+#  ServerAlias   <%= node[:fqdn] %>
+#  DocumentRoot  <%= node['piwigo']['wwwdir'] %>/current
+#
+#  <Directory <%= node['piwigo']['wwwdir'] %>/current>
+#	Options FollowSymLinks
+#	AllowOverride FileInfo Options
+#	Order allow,deny
+#	Allow from all
+#  </Directory>
+#
+#  <Directory />
+#        Options FollowSymLinks
+#        AllowOverride None
+#  </Directory>
+#
+#  <Location /server-status>
+#    SetHandler server-status
+#    Order Deny,Allow
+#    Deny from all
+#    Allow from 127.0.0.1
+#  </Location>
+#
+#  SSLEngine on
+#  SSLProtocol -ALL +SSLv3 +TLSv1
+#  SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
+#  SSLCertificateFile <%= node[:piwigo][:sslcertfile] %>
+#  SSLCertificateKeyFile <%= node[:piwigo][:sslkeyfile] %>
+#  SSLCertificateChainFile <%= node[:piwigo][:sslchainfile] %>
+#
+#  LogLevel info
+#  ErrorLog <%= node['piwigo']['log_dir'] %>/piwigo_error.log
+#  CustomLog <%= node['piwigo']['log_dir'] %>/piwigo_access.log combined
+#</VirtualHost>
+#<% end -%>
